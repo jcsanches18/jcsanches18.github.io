@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Compara Preço</title>
+
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Compara Preço" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+
+    <meta name="description" content="Compare preços de produtos no supermercado. Descubra na hora qual sai mais barato por litro, quilo ou unidade." />
+    <meta property="og:title" content="Compara Preço" />
+    <meta property="og:description" content="Compare preços no supermercado por litro, quilo ou unidade. Rápido, simples e offline." />
+
+    <script>
+      // Service worker só no site publicado: no app nativo (https://localhost) e no dev ele atrapalha as atualizações.
+      if ('serviceWorker' in navigator && location.protocol === 'https:' && location.hostname !== 'localhost') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/index-DZCfZiB3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DB0AMr3b.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
