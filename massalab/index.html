@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>MassaLab: porcentagem do padeiro</title>
+    <meta name="description" content="Calculadora de panificação por porcentagem do padeiro: pão, pizza, focaccia, levain e massas doces em qualquer quantidade. Sem conta e sem internet." />
+
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#f9fafb" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="MassaLab" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+
+    <meta property="og:title" content="MassaLab: porcentagem do padeiro" />
+    <meta property="og:description" content="Receitas de pão, pizza e levain por porcentagem do padeiro, em gramas para qualquer quantidade." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./icons/icon-512.png" />
+
+    <script>
+      // Service worker só no site publicado: no app nativo (https://localhost) e no dev ele atrapalha as atualizações.
+      if ('serviceWorker' in navigator && location.protocol === 'https:' && location.hostname !== 'localhost') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/index-6d3pgCiW.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BVEjZpyY.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

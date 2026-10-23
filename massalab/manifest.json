@@ -1,0 +1,59 @@
+{
+  "name": "MassaLab: porcentagem do padeiro",
+  "short_name": "MassaLab",
+  "description": "Calculadora de panificação por porcentagem do padeiro: pão, pizza, focaccia, levain e massas doces em qualquer quantidade.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0a0a0b",
+  "background_color": "#0a0a0b",
+  "lang": "pt-BR",
+  "categories": [
+    "food",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/calculadora.png",
+      "sizes": "1080x1860",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Calculadora com a receita em gramas e os indicadores"
+    },
+    {
+      "src": "screenshots/prefermento.png",
+      "sizes": "1080x1860",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Pré-fermento dividido entre biga e massa final"
+    }
+  ]
+}
