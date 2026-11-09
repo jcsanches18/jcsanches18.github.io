@@ -1,11 +1,26 @@
-// Service worker do site (não roda no app nativo: index.html só o registra fora de localhost).
-// Páginas: rede primeiro, cache se offline. Assets com hash: cache primeiro.
+// Service worker do site (não roda no app nativo: index.html só o registra em https fora de localhost).
+// Instalação: guarda a página e os arquivos que ela carrega, para o app abrir offline já na segunda vez.
+// Páginas: rede primeiro, cache se offline. Arquivos com hash: cache primeiro.
 // Os apps do site dividem a mesma origem (jcsanches18.github.io) e o mesmo CacheStorage:
 // cada um só mexe nos caches com o próprio prefixo.
 const PREFIXO = 'compara-preco-';
-const CACHE = PREFIXO + 'v4';
+const CACHE = PREFIXO + 'v5';
 
-self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    try {
+      const res = await fetch('./', { cache: 'no-store' });
+      if (res.ok) {
+        const html = await res.clone().text();
+        await cache.put('./', res);
+        const urls = [...html.matchAll(/(?:src|href)="(\.\/[^"#?]+)"/g)].map((m) => m[1]);
+        await cache.addAll([...new Set(urls)]);
+      }
+    } catch { /* offline na instalação: o cache enche no uso */ }
+    await self.skipWaiting();
+  })());
+});
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
@@ -17,19 +32,19 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
-  const navegacao = req.mode === 'navigate' || req.destination === 'document';
-  if (navegacao || /manifest\.json$/.test(req.url)) {
+  const pagina = req.mode === 'navigate' || req.destination === 'document';
+  if (pagina || /manifest\.json$/.test(req.url)) {
     event.respondWith(
       fetch(req).then((r) => {
-        if (r && r.ok) caches.open(CACHE).then((c) => c.put(req, r.clone()));
+        if (r && r.ok) { const copia = r.clone(); caches.open(CACHE).then((c) => c.put(pagina ? './' : req, copia)); }
         return r;
-      }).catch(() => caches.open(CACHE).then((c) => c.match(req).then((r) => r || c.match('./index.html'))))
+      }).catch(() => caches.open(CACHE).then((c) => c.match(pagina ? './' : req).then((r) => r || c.match('./'))))
     );
     return;
   }
   event.respondWith(
     caches.open(CACHE).then((c) => c.match(req)).then((cached) => cached || fetch(req).then((r) => {
-      if (r && r.ok) caches.open(CACHE).then((c) => c.put(req, r.clone()));
+      if (r && r.ok) { const copia = r.clone(); caches.open(CACHE).then((c) => c.put(req, copia)); }
       return r;
     }))
   );
