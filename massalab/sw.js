@@ -4,7 +4,7 @@
 // Os apps do site dividem a mesma origem (jcsanches18.github.io) e o mesmo CacheStorage:
 // cada um só mexe nos caches com o próprio prefixo.
 const PREFIXO = 'massalab-';
-const CACHE = PREFIXO + 'v1';
+const CACHE = PREFIXO + 'v2'; // v2: a v1 podia ter gravado outra página (privacidade.html) no lugar do app
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -29,16 +29,27 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+/** A navegação é para a página do app (a pasta do service worker ou o index.html dela)? */
+function ehRaiz(url) {
+  const pasta = new URL('./', self.location.href).pathname;
+  const caminho = new URL(url).pathname;
+  return caminho === pasta || caminho === pasta + 'index.html';
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
   const page = req.mode === 'navigate' || req.destination === 'document';
   if (page || /manifest\.json$/.test(req.url)) {
+    // Só a raiz do app (ou o index.html, com ou sem ?query) vai para a chave './'; outra página do site
+    // (privacidade.html) fica com a própria URL e nunca toma o lugar do app no cache.
+    const raiz = page && ehRaiz(req.url);
+    const chave = raiz ? './' : req;
     event.respondWith(
       fetch(req).then((r) => {
-        if (r && r.ok) { const copy = r.clone(); caches.open(CACHE).then((c) => c.put(page ? './' : req, copy)); }
+        if (r && r.ok) { const copy = r.clone(); caches.open(CACHE).then((c) => c.put(chave, copy)); }
         return r;
-      }).catch(() => caches.open(CACHE).then((c) => c.match(page ? './' : req).then((r) => r || c.match('./'))))
+      }).catch(() => caches.open(CACHE).then((c) => c.match(chave).then((r) => r || (raiz ? c.match('./') : Response.error()))))
     );
     return;
   }
